@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Reciper</title>
+    <script>
+        async function getRecipe() {
+            const input = document.getElementById("chat-input").value;
+            if (!input) {
+                alert("Please enter a recipe request!");
+                return;
+            }
+
+            try {
+                console.log("Sending request with input:", input);
+                const response = await fetch("http://127.0.0.1:5000/get-recipe", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ user_input: input })
+                });
+
+                console.log("Response status:", response.status);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Received data:", data);
+                    alert(`Recipe: ${data.recipe}`);
+                } else {
+                    alert("Error fetching recipe. Status code: " + response.status);
+                }
+            } catch (error) {
+                console.error("Error during fetch:", error);
+                alert("An error occurred. Please check the console for details.");
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="chat-input" placeholder="Enter the recipe you want">
+        <div class="input-group-append">
+            <button id="gpt-button" class="btn btn-primary" type="submit">Get recipe</button>
+        </div>
+    </div>
+</body>
+</html>
